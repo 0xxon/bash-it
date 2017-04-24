@@ -1,17 +1,16 @@
 # Helper function loading various enable-able files
 function _load_bash_it_files() {
   subdirectory="$1"
-  if [ ! -d "${BASH_IT}/${subdirectory}/enabled" ]
+  if [ -d "${BASH_IT}/${subdirectory}/enabled" ]
   then
-    continue
+    FILES="${BASH_IT}/${subdirectory}/enabled/*.bash"
+    for config_file in $FILES
+    do
+      if [ -e "${config_file}" ]; then
+        source $config_file
+      fi
+    done
   fi
-  FILES="${BASH_IT}/${subdirectory}/enabled/*.bash"
-  for config_file in $FILES
-  do
-    if [ -e "${config_file}" ]; then
-      source $config_file
-    fi
-  done
 }
 
 # Function for reloading aliases
@@ -434,7 +433,7 @@ if ! type pathmunge > /dev/null 2>&1
 then
   function pathmunge () {
     about 'prevent duplicate directories in you PATH variable'
-    group 'lib helpers'
+    group 'helpers'
     example 'pathmunge /path/to/dir is equivalent to PATH=/path/to/dir:$PATH'
     example 'pathmunge /path/to/dir after is equivalent to PATH=$PATH:/path/to/dir'
 
